@@ -1,3 +1,7 @@
+echo 'install yum-utils'
+yum install -y yum-utils
+
+yum-config-manager --add-repo https://openresty.org/package/centos/openresty.repo
 # 更新源
 cat << EOF > /etc/yum.repos.d/mongodb-org-3.4.repo
 [mongodb-org-3.4]  
@@ -11,30 +15,29 @@ EOF
 yum update -y
 
 echo 'install git'
-yum install git -y
-
-echo 'install yum-utils'
-yum install yum-utils -y
+yum install -y git
 
 # 安装openresty-resty 1.13.6
-yum-config-manager --add-repo https://openresty.org/package/centos/openresty.repo
 echo 'install openresty-resty 1.13.6'
-yum install openresty-resty -y
+yum install -y openresty-resty
 
 # 安装mongodb3.4
 echo 'install mongodb-org'
-yum -y install mongodb-org
+yum install -y mongodb-org
 if [ ! -d "/data" ];then
     mkdir /data
 fi
 if [ ! -d "/data/mongodb" ];then
     mkdir /data/mongodb
 fi
+
 # 再另外一个终端输入 mongod --dbpath=/data/mongodb --port 27017
 # 加admin超级用户
 # mongo admin --eval "db.createUser({user:\"admin\", pwd:\"qwe123QWE\", roles:[{role:\"userAdminAnyDatabase\", db:\"admin\"}]})"
+
 # 加单个数据库的用户
 # mongo app --eval "db.createUser({user:\"miss\", pwd:\"chuer\", roles:[\"readWrite\", \"dbAdmin\"]})"
+
 # mongodb 加入 start_all.sh 和 stop_all.sh
 # start_all.sh
 #启动mongodb
@@ -51,8 +54,9 @@ fi
 #    echo "killed mongod", $mid
 #    kill $mid
 #fi
+
 #安装redis4
-yum -y install gcc
+yum install -y gcc
 redis=redis-4.0.6
 wget http://download.redis.io/releases/$redis.tar.gz
 tar xzvf $redis.tar.gz
@@ -72,4 +76,3 @@ cp `pwd`/utils/redis_init_script /etc/init.d/redisd
 #chkconfig redisd on
 # 启动
 # service redisd start
-
