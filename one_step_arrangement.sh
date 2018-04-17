@@ -57,6 +57,9 @@ fi
 
 #安装redis4
 yum install -y gcc
+
+#安装wget
+yum install -y wget
 redis=redis-4.0.6
 wget http://download.redis.io/releases/$redis.tar.gz
 tar xzvf $redis.tar.gz
@@ -64,8 +67,11 @@ cd $redis
 make MALLOC=libc
 cd src && make install
 
+cd ..
 # 配置redis启动环境
-mkdir /etc/redis
+if [ ! -d "/etc/redis" ];then
+    mkdir /etc/redis
+fi
 # 把redis.conf里面的daemonize 改成yes
 cp `pwd`/redis.conf /etc/redis/6379.conf
 cp `pwd`/utils/redis_init_script /etc/init.d/redisd
