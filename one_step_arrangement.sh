@@ -56,7 +56,7 @@ fi
 #fi
 
 #安装redis4
-yum install -y gcc
+yum install -y gcc gcc-c++
 
 #安装wget
 yum install -y wget
@@ -82,3 +82,57 @@ cp `pwd`/utils/redis_init_script /etc/init.d/redisd
 #chkconfig redisd on
 # 启动
 # service redisd start
+
+# 配置adminmongo
+if [ ! -d "/home/setup" ];then
+    mkdir /home/setup
+fi
+
+# 安装nodejs
+#nodejs=node-v6.9.1
+#wget https://npm.taobao.org/mirrors/node/v6.9.1/$node.tar.gz
+#tar xzvf $nodejs.tar.gz
+#cd $nodejs
+#./configure
+#make && make install
+
+nodejs=node-v8.11.1-linux-x64
+wget https://nodejs.org/dist/v8.11.1/$nodejs.tar.xz
+tar --strip-components 1 -xvf $nodejs.tar.xz -C /usr/local
+
+npm config set registry https://registry.npm.taobao.org
+cat << EOF > ~/.npmrc
+registry=https://registry.npm.taobao.org
+sass_binary_site=https://npm.taobao.org/mirrors/node-sass/
+phantomjs_cdnurl=http://npm.taobao.org/mirrors/phantomjs
+ELECTRON_MIRROR=http://npm.taobao.org/mirrors/electron/
+EOF
+
+# 启动adminmongo
+cd /home/setup
+git clone https://github.com/mrvautin/adminMongo
+cd adminMongo
+npm install
+
+# 添加防火墙1234端口
+firewall-cmd --zone=public --add-port=1234/tcp --permanent
+firewall-cmd --zone=public --add-port=8085/tcp --permanent
+firewall-cmd --reload
+
+# 安装jdk
+jdk=jdk-8u172-linux-x64
+http://download.oracle.com/otn-pub/java/jdk/8u172-b11/a58eab1ec242421181065cdc37240b08/$jdk.tar.gz?AuthParam=1524031798_6f4ca6b2feabb1b0d36ed9157a44616f
+JAVA_HOME=/usr/local/java
+if [ ! -d "$JAVA_HOME" ];then
+    mkdir $JAVA_HOME
+fi
+
+tar --strip-components 1 -xzvf jdk* -C $JAVA_HOME
+cat << EOF >> /etc/profile
+JAVA_HOME=/usr/local/java
+JRE_HOME=$JAVA_HOME/jre
+CLASS_PATH=.:$JAVA_HOME/lib/dt.jar:$JAVA_HOME/lib/tools.jar:$JRE_HOME/lib
+PATH=$PATH:$JAVA_HOME/bin:$JRE_HOME/bin
+export JAVA_HOME JRE_HOME CLASS_PATH PATH
+EOF
+source /etc/profile
