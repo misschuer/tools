@@ -136,3 +136,30 @@ PATH=$PATH:$JAVA_HOME/bin:$JRE_HOME/bin
 export JAVA_HOME JRE_HOME CLASS_PATH PATH
 EOF
 source /etc/profile
+
+-- 安装lor
+cd /home/setup
+git clone https://github.com/sumory/lor
+cd lor
+make install
+
+#安装lualocks
+wget https://luarocks.org/releases/luarocks-2.4.1.tar.gz
+tar -xzvf luarocks-2.4.1.tar.gz
+cd luarocks-2.4.1/
+./configure --prefix=/usr/local/openresty/luajit \
+    --with-lua=/usr/local/openresty/luajit/ \
+    --lua-suffix=jit \
+    --with-lua-include=/usr/local/openresty/luajit/include/luajit-2.1
+make build
+make install
+
+cat << EOF >> /etc/profile
+export PATH=$PATH:/usr/local/openresty/luajit/bin
+EOF
+source /etc/profile
+
+yum install -y libcurl-devel
+
+luarocks install Lua-cURL --server=https://luarocks.org/dev
+
