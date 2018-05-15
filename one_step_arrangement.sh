@@ -143,6 +143,7 @@ git clone https://github.com/sumory/lor
 cd lor
 make install
 
+yum install -y unzip
 #安装lualocks
 wget https://luarocks.org/releases/luarocks-2.4.1.tar.gz
 tar -xzvf luarocks-2.4.1.tar.gz
