@@ -164,8 +164,8 @@ yum install -y libcurl-devel
 luarocks install Lua-cURL --server=https://luarocks.org/dev
 
 cd /etc/ld.so.conf.d
--cat << EOF > app.conf
+cat << EOF > app.conf
 /usr/local/openresty/lualib 
--EOF
+EOF
 ldconfig
 
