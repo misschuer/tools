@@ -34,6 +34,8 @@ fi
 # 再另外一个终端输入 mongod --dbpath=/data/mongodb --port 27017
 # 加admin超级用户
 # mongo admin --eval "db.createUser({user:\"admin\", pwd:\"qwe123QWE\", roles:[{role:\"userAdminAnyDatabase\", db:\"admin\"}]})"
+# 如果是一个root管理所有库
+# # mongo admin --eval "db.createUser({user:\"admin\", pwd:\"qwe123QWE\", roles:[{role:\"root\", db:\"admin\"}]})"
 
 # 加单个数据库的用户
 # mongo app --eval "db.createUser({user:\"miss\", pwd:\"chuer\", roles:[\"readWrite\", \"dbAdmin\"]})"
