@@ -165,6 +165,9 @@ cd luarocks-2.4.1/
 make build
 make install
 
+# 安装luasocket
+luarocks install luasocket
+
 cat << EOF >> /etc/profile
 export PATH=$PATH:/usr/local/openresty/luajit/bin
 EOF
