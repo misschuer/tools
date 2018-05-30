@@ -122,8 +122,9 @@ firewall-cmd --zone=public --add-port=8085/tcp --permanent
 firewall-cmd --reload
 
 # 安装jdk
+# 下载之前先得确定地址能用
 jdk=jdk-8u172-linux-x64
-http://download.oracle.com/otn-pub/java/jdk/8u172-b11/a58eab1ec242421181065cdc37240b08/$jdk.tar.gz?AuthParam=1524031798_6f4ca6b2feabb1b0d36ed9157a44616f
+wget http://download.oracle.com/otn-pub/java/jdk/8u172-b11/a58eab1ec242421181065cdc37240b08/$jdk.tar.gz?AuthParam=1524031798_6f4ca6b2feabb1b0d36ed9157a44616f
 JAVA_HOME=/usr/local/java
 if [ ! -d "$JAVA_HOME" ];then
     mkdir $JAVA_HOME
