@@ -140,6 +140,11 @@ export JAVA_HOME JRE_HOME CLASS_PATH PATH
 EOF
 source /etc/profile
 
+-- 安装solr
+wget https://mirrors.tuna.tsinghua.edu.cn/apache/lucene/solr/7.3.1/solr-7.3.1.zip
+unzip solr-7.3.1.zip
+sh install_solr_service.sh -d /opt/solr_data/ -i /opt/solr_install/ -p 8985 -s lcsolr
+
 -- 安装lor
 cd /home/setup
 git clone https://github.com/sumory/lor
