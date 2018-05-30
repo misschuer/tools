@@ -158,6 +158,12 @@ sh solr-7.3.1/bin/install_solr_service.sh solr-7.3.1.zip -d $solr_data -i $solr_
 #/etc/security/limits.d/20-nproc.conf
 firewall-cmd --zone=public --add-port=8983/tcp --permanent
 firewall-cmd --reload
+# 加steam_body权限
+#new_core="nickname"
+#curl http://localhost:8983/solr/$new_core/config -H 'Content-type:application/json' -d'{
+#    "set-property" : {"requestDispatcher.requestParsers.enableRemoteStreaming":true},
+#    "set-property" : {"requestDispatcher.requestParsers.enableStreamBody":true}
+#}'
 
 -- 安装lor
 cd /home/setup
