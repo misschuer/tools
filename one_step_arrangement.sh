@@ -144,6 +144,8 @@ source /etc/profile
 wget https://mirrors.tuna.tsinghua.edu.cn/apache/lucene/solr/7.3.1/solr-7.3.1.zip
 unzip solr-7.3.1.zip
 sh install_solr_service.sh -d /opt/solr_data/ -i /opt/solr_install/ -p 8985 -s lcsolr
+-- 拷贝conf
+cp -rf /opt/solr_install/solr-7.3.1/server/solr/configsets/sample_techproducts_configs/conf/ /opt/solr_data/data/new_core
 
 -- 安装lor
 cd /home/setup
