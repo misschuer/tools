@@ -143,7 +143,15 @@ source /etc/profile
 -- 安装solr
 wget https://mirrors.tuna.tsinghua.edu.cn/apache/lucene/solr/7.3.1/solr-7.3.1.zip
 unzip solr-7.3.1.zip
-sh solr-7.3.1/bin/install_solr_service.sh -d /opt/solr_data/ -i /opt/solr_install/
+solr_data=/opt/solr_data
+solr_install=/opt/solr_install
+if [ ! -d "$solr_data" ];then
+    mkdir $solr_data
+fi
+if [ ! -d "$solr_install" ];then
+    mkdir $solr_install
+fi
+sh solr-7.3.1/bin/install_solr_service.sh solr-7.3.1.zip -d $solr_data -i $solr_install
 -- 拷贝conf
 cp -rf /opt/solr_install/solr-7.3.1/server/solr/configsets/sample_techproducts_configs/conf/ /opt/solr_data/data/new_core
 
