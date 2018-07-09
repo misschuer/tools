@@ -1,0 +1,47 @@
+1> rsync的服务端配置文件
+
+vim /etc/rsyncd.conf
+
+##############################
+uid = root
+gid = root
+use chroot = yes
+max connections = 4
+pid file = /var/run/rsyncd.pid
+lock file=/var/run/rsyncd.lock
+log file = /var/log/rsyncd.log
+exclude = lost+found/
+transfer logging = yes
+timeout = 900
+ignore nonreadable = yes
+dont compress   = *.gz *.tgz *.zip *.z *.Z *.rpm *.deb *.bz2
+
+# [ftp]
+#        path = /home/ftp
+#        comment = ftp export area
+
+[common]
+comment = web content    #定义注释说明字串
+path = /common          # 这里是路径
+ignore errors
+#exclude = test/    #exclude指定common目录下某个目录可以不同步数据
+read only = no
+auth users = tom
+secrets file = /etc/rsyncd.secrets
+hosts allow = *
+#hosts deny = *    #除了hosts allow定义的主机外，拒绝其他所有
+list = false
+################################
+
+chmod 600 /etc/rsyncd.secrets
+ehco "tom:FYiZ5Fp4mRr3hkBA" >> /etc/rsyncd.secrets
+
+2> 本地客户端同步数据到远程服务器
+chmod 600 /etc/rsyncd.secrets
+ehco "FYiZ5Fp4mRr3hkBA" >> /etc/rsyncd.secrets
+rsync --password-file=/etc/rsyncd.secrets -av /data/app/back tom@101.132.174.148::common
+/data/app/back => 本地文件夹
+tom : rsync的user
+101.132.174.148 : rsync远程服务器地址
+common : rsync远程服务器模块
+
