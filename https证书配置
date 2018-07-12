@@ -1,0 +1,155 @@
+以下以给cptest.xxx.com上添加https为例子
+
+第一步、下载证书执行脚本
+//创建证书目录
+
+# mkdir /data/wwwroot/ssl_file/letencrypt/cptest.xxx.com  
+
+//进入certs目录
+
+# cd /data/wwwroot/ssl_file/letencrypt/cptest.xxx.com  
+
+ //下载脚本配置文件# wget https://raw.githubusercontent.com/xdtianyu/scripts/master/lets-encrypt/letsencrypt.conf
+
+//下载脚本配置文件
+
+# wget https://raw.githubusercontent.com/xdtianyu/scripts/master/lets-encrypt/letsencrypt.sh//给予脚本755权限chmod +x letsencrypt.sh
+
+第二步、配置域名配置文件
+为了正确的使用https，在letencrypt.conf文件中需要正确的配置域名对应的文件目录路径，详细的配置letencrypt.conf文件配置如下。
+
+# only modify the values, key files will be generated automaticly.ACCOUNT_KEY="letsencryptaccount.key"
+
+DOMAIN_KEY="cptest.xxx.com.key"
+
+// 注意这个地方一定要和域名的配置目录保持一致，否则生成证书会出错。DOMAIN_DIR="/data/wwwroot/testing/testing_server_test/public"
+
+// DNS的配置
+
+DOMAINS="DNS:cptest.xxx.com"
+
+#ECC=TRUE#LIGHTTPD=TRUE
+
+第三步、生成证书文件
+通过第一步和第二步，我们的基础配置文件都已经配置完成，接下需要生成证书。执行命令
+
+./letsencrypt.sh letsencrypt.conf
+
+在执行的过程，脚本会自动的检验域名是否能够访问成功，若letsencrypt.conf文件中配置的域名与对应的访问路径不正确，则会报如下错误。
+
+Generate account key...Generating RSA private key, 4096 bit long modulus.....................................................................++...........++e is 65537 (0x10001)Generate domain key...Generating RSA private key, 2048 bit long modulus.........+++.........................+++e is 65537 (0x10001)Generate CSR...cptest.csrParsing account key...Parsing CSR...Registering account...Registered!Verifying cptest.xxx.com...Traceback (most recent call last):  File "/tmp/acme_tiny.py", line 198, inmain(sys.argv[1:])
+
+File "/tmp/acme_tiny.py", line 194, in main
+
+signed_crt = get_crt(args.account_key, args.csr, args.acme_dir, log=LOGGER, CA=args.ca)
+
+File "/tmp/acme_tiny.py", line 123, in get_crt
+
+wellknown_path, wellknown_url))
+
+ValueError: Wrote file to /data/wwwroot/testing/testing_server_test/.well-known/acme-challenge/wRf1bolKp92cX4YdHKIEMf9DxGhtnP6GvvOvB6rY2F0, but couldn't download http://cptest.xxx.com/.well-known/acme-challenge/wRf1bolKp92cX4YdHKIEMf9DxGhtnP6GvvOvB6rY2F0
+
+如果正确的配置，则提示如下
+
+Generate account key...
+
+Generating RSA private key, 4096 bit long modulus
+
+..................................................................................................................................................................................++
+
+........................................................................................................................................++
+
+e is 65537 (0x10001)
+
+Generate domain key...
+
+Generating RSA private key, 2048 bit long modulus
+
+......+++
+
+...............................+++
+
+e is 65537 (0x10001)
+
+Generate CSR...cptest.csr
+
+Parsing account key...
+
+Parsing CSR...
+
+Registering account...
+
+Registered!
+
+Verifying cptest.xxx.com...
+
+cptest.xxx.com verified!
+
+Signing certificate...
+
+Certificate signed!
+
+New cert: cptest.chained.crt has been generated
+
+完成后会在当前目录下生成，如下文件
+
+cptest.chained.crt
+
+cptest.crt
+
+cptest.csr
+
+cptest.xxx.com.key
+
+letsencrypt-account.key
+
+letsencrypt.conf
+
+letsencrypt.sh
+
+lets-encrypt-x3-cross-signed.pem
+
+第四步、在Nginx上配置SSL
+完成上述步骤后，基本上生成证书的步骤已经完成，接下来就是要把https应用到对应的域名上，在nginx中配置如下
+
+server {
+
+#listen 80;
+
+listen 443;
+
+ssl on;
+
+ssl_certificate /data/wwwroot/ssl_file/letencrypt/cptest.xxx.com/cptest.chained.crt;
+
+ssl_certificate_key /data/wwwroot/ssl_file/letencrypt/cptest.xxx.com/cptest.xxx.com.key;
+
+server_name cptest.xxx.com;
+
+access_log /data/wwwlogs/nginx/cptest.xxx.com_nginx.log combined;
+
+error_log /data/wwwlogs/nginx/cptest.xxx.com_errr_log;
+
+index index.html index.htm index.php;
+
+include /usr/local/tengine/conf/rewrite/other.conf;
+
+root /data/wwwroot/testing/testing_server_test/public;
+
+}
+
+第五步、定时更新证书
+至此，前面我们已经可以给域名配置好了https服务，但是由于LetEncrypt证书有效期只有90天，因此还需要使用定时任务来更新证书，在crontab中增加一条定时命令，让https证书在每月的1号自动进行更新，命令如下
+
+0 0 1 * * /data/wwwroot/ssl_file/letencrypt/cptest.xxx.com/letsencrypt.sh /data/wwwroot/ssl_file/letencrypt/cptest.xxx.com/letsencrypt.conf >> /data/wwwlogs/letencrypt/cptest.xxx.com-lets-encrypt.log 2>&1
+
+参考资料
+
+https://lirongyao.com/lets-encrypt.html
+
+http://blog.csdn.net/dingxl555/article/details/51749956
+
+作者：Focus_lazy
+链接：https://www.jianshu.com/p/ee5c589950d1
+來源：简书
+简书著作权归作者所有，任何形式的转载都请联系作者获得授权并注明出处。
