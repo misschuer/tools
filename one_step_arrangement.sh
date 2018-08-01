@@ -134,22 +134,22 @@ firewall-cmd --reload
 
 # 安装jdk
 # 下载之前先得确定地址能用
-# jdk=jdk-8u172-linux-x64
-# wget http://download.oracle.com/otn-pub/java/jdk/8u172-b11/a58eab1ec242421181065cdc37240b08/$jdk.tar.gz?AuthParam=1524031798_6f4ca6b2feabb1b0d36ed9157a44616f
-# JAVA_HOME=/usr/local/java
-# if [ ! -d "$JAVA_HOME" ];then
-#     mkdir $JAVA_HOME
-# fi
+jdk=jdk-8u172-linux-x64
+wget http://download.oracle.com/otn-pub/java/jdk/8u172-b11/a58eab1ec242421181065cdc37240b08/$jdk.tar.gz?AuthParam=1524031798_6f4ca6b2feabb1b0d36ed9157a44616f
+JAVA_HOME=/usr/local/java
+if [ ! -d "$JAVA_HOME" ];then
+    mkdir $JAVA_HOME
+fi
 
-# tar --strip-components 1 -xzvf jdk* -C $JAVA_HOME
-# cat << EOF >> /etc/profile
-# JAVA_HOME=/usr/local/java
-# JRE_HOME=$JAVA_HOME/jre
-# CLASS_PATH=.:$JAVA_HOME/lib/dt.jar:$JAVA_HOME/lib/tools.jar:$JRE_HOME/lib
-# PATH=$PATH:$JAVA_HOME/bin:$JRE_HOME/bin
-# export JAVA_HOME JRE_HOME CLASS_PATH PATH
-# EOF
-# source /etc/profile
+tar --strip-components 1 -xzvf jdk* -C $JAVA_HOME
+cat << EOF >> /etc/profile
+JAVA_HOME=/usr/local/java
+JRE_HOME=$JAVA_HOME/jre
+CLASS_PATH=.:$JAVA_HOME/lib/dt.jar:$JAVA_HOME/lib/tools.jar:$JRE_HOME/lib
+PATH=$PATH:$JAVA_HOME/bin:$JRE_HOME/bin
+export JAVA_HOME JRE_HOME CLASS_PATH PATH
+EOF
+source /etc/profile
 
 # 安装solr
 # 注意版本可能会变, 需要确认
