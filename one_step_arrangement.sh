@@ -196,10 +196,16 @@ mkdir $solr_path/$cow_name
 cp -r $solr_install/solr-$version/server/solr/configsets/sample_techproducts_configs/conf $solr_path/$cow_name
 cd $solr_path
 chown solr:solr -R *
+
 # 拷贝conf
 #cp -rf /opt/solr_install/solr-7.3.1/server/solr/configsets/sample_techproducts_configs/conf/ /opt/solr_data/data/new_core
 # 修改Max Processes Limit 把4096改成65000
 #/etc/security/limits.d/20-nproc.conf
+#*          soft    nproc     65000
+#/etc/security/limits.conf
+#* soft nproc 65000
+#* hard nproc 65000
+
 # 加steam_body权限
 #new_core="nickname"
 #curl http://localhost:8983/solr/$new_core/config -H 'Content-type:application/json' -d'{
