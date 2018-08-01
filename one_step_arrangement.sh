@@ -22,14 +22,14 @@ echo 'install openresty-resty 1.13.6'
 yum install -y openresty-resty
 
 # 安装mongodb3.4
-echo 'install mongodb-org'
-yum install -y mongodb-org
-if [ ! -d "/data" ];then
-    mkdir /data
-fi
-if [ ! -d "/data/mongodb" ];then
-    mkdir /data/mongodb
-fi
+#echo 'install mongodb-org'
+#yum install -y mongodb-org
+#if [ ! -d "/data" ];then
+#    mkdir /data
+#fi
+#if [ ! -d "/data/mongodb" ];then
+#    mkdir /data/mongodb
+#fi
 
 # 再另外一个终端输入 mongod --dbpath=/data/mongodb --port 27017
 # 加admin超级用户
@@ -86,9 +86,9 @@ cp `pwd`/utils/redis_init_script /etc/init.d/redisd
 # service redisd start
 
 # 配置adminmongo
-if [ ! -d "/home/setup" ];then
-    mkdir /home/setup
-fi
+#if [ ! -d "/home/setup" ];then
+#    mkdir /home/setup
+#fi
 
 # 安装nodejs
 #nodejs=node-v6.9.1
@@ -98,47 +98,58 @@ fi
 #./configure
 #make && make install
 
-nodejs=node-v8.11.1-linux-x64
-wget https://nodejs.org/dist/v8.11.1/$nodejs.tar.xz
-tar --strip-components 1 -xvf $nodejs.tar.xz -C /usr/local
+#nodejs=node-v8.11.1-linux-x64
+#wget https://nodejs.org/dist/v8.11.1/$nodejs.tar.xz
+#tar --strip-components 1 -xvf $nodejs.tar.xz -C /usr/local
 
-npm config set registry https://registry.npm.taobao.org
-cat << EOF > ~/.npmrc
-registry=https://registry.npm.taobao.org
-sass_binary_site=https://npm.taobao.org/mirrors/node-sass/
-phantomjs_cdnurl=http://npm.taobao.org/mirrors/phantomjs
-ELECTRON_MIRROR=http://npm.taobao.org/mirrors/electron/
-EOF
+#npm config set registry https://registry.npm.taobao.org
+#cat << EOF > ~/.npmrc
+#registry=https://registry.npm.taobao.org
+#sass_binary_site=https://npm.taobao.org/mirrors/node-sass/
+#phantomjs_cdnurl=http://npm.taobao.org/mirrors/phantomjs
+#ELECTRON_MIRROR=http://npm.taobao.org/mirrors/electron/
+#EOF
 
 # 启动adminmongo
-cd /home/setup
-git clone https://github.com/mrvautin/adminMongo
-cd adminMongo
-npm install
+#cd /home/setup
+#git clone https://github.com/mrvautin/adminMongo
+#cd adminMongo
+#npm install
 
 # 添加防火墙1234端口
-firewall-cmd --zone=public --add-port=1234/tcp --permanent
-firewall-cmd --zone=public --add-port=8085/tcp --permanent
+#firewall-cmd --zone=public --add-port=1234/tcp --permanent
+#firewall-cmd --zone=public --add-port=8085/tcp --permanent
+firewall-cmd --zone=public --add-port=7777/tcp --permanent
+firewall-cmd --zone=public --add-port=8160-8199/tcp --permanent
+firewall-cmd --zone=public --add-port=20/tcp --permanent
+firewall-cmd --zone=public --add-port=21/tcp --permanent
+firewall-cmd --zone=public --add-port=22/tcp --permanent
+firewall-cmd --zone=public --add-port=80/tcp --permanent
+firewall-cmd --zone=public --add-port=443/tcp --permanent
+firewall-cmd --zone=public --add-port=8983/tcp --permanent
+firewall-cmd --zone=public --add-port=3306/tcp --permanent
+firewall-cmd --zone=public --add-port=8778/tcp --permanent
+firewall-cmd --zone=public --add-port=873/tcp --permanent
 firewall-cmd --reload
 
 # 安装jdk
 # 下载之前先得确定地址能用
-jdk=jdk-8u172-linux-x64
-wget http://download.oracle.com/otn-pub/java/jdk/8u172-b11/a58eab1ec242421181065cdc37240b08/$jdk.tar.gz?AuthParam=1524031798_6f4ca6b2feabb1b0d36ed9157a44616f
-JAVA_HOME=/usr/local/java
-if [ ! -d "$JAVA_HOME" ];then
-    mkdir $JAVA_HOME
-fi
+# jdk=jdk-8u172-linux-x64
+# wget http://download.oracle.com/otn-pub/java/jdk/8u172-b11/a58eab1ec242421181065cdc37240b08/$jdk.tar.gz?AuthParam=1524031798_6f4ca6b2feabb1b0d36ed9157a44616f
+# JAVA_HOME=/usr/local/java
+# if [ ! -d "$JAVA_HOME" ];then
+#     mkdir $JAVA_HOME
+# fi
 
-tar --strip-components 1 -xzvf jdk* -C $JAVA_HOME
-cat << EOF >> /etc/profile
-JAVA_HOME=/usr/local/java
-JRE_HOME=$JAVA_HOME/jre
-CLASS_PATH=.:$JAVA_HOME/lib/dt.jar:$JAVA_HOME/lib/tools.jar:$JRE_HOME/lib
-PATH=$PATH:$JAVA_HOME/bin:$JRE_HOME/bin
-export JAVA_HOME JRE_HOME CLASS_PATH PATH
-EOF
-source /etc/profile
+# tar --strip-components 1 -xzvf jdk* -C $JAVA_HOME
+# cat << EOF >> /etc/profile
+# JAVA_HOME=/usr/local/java
+# JRE_HOME=$JAVA_HOME/jre
+# CLASS_PATH=.:$JAVA_HOME/lib/dt.jar:$JAVA_HOME/lib/tools.jar:$JRE_HOME/lib
+# PATH=$PATH:$JAVA_HOME/bin:$JRE_HOME/bin
+# export JAVA_HOME JRE_HOME CLASS_PATH PATH
+# EOF
+# source /etc/profile
 
 -- 安装solr
 wget https://mirrors.tuna.tsinghua.edu.cn/apache/lucene/solr/7.3.1/solr-7.3.1.zip
@@ -156,8 +167,6 @@ sh solr-7.3.1/bin/install_solr_service.sh solr-7.3.1.zip -d $solr_data -i $solr_
 #cp -rf /opt/solr_install/solr-7.3.1/server/solr/configsets/sample_techproducts_configs/conf/ /opt/solr_data/data/new_core
 # 修改Max Processes Limit 把4096改成65000
 #/etc/security/limits.d/20-nproc.conf
-firewall-cmd --zone=public --add-port=8983/tcp --permanent
-firewall-cmd --reload
 # 加steam_body权限
 #new_core="nickname"
 #curl http://localhost:8983/solr/$new_core/config -H 'Content-type:application/json' -d'{
