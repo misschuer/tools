@@ -150,6 +150,9 @@ export JAVA_HOME JRE_HOME CLASS_PATH PATH
 EOF
 source /etc/profile
 
+# 先设置Max Processes Limit
+ulimit -u 65000
+
 # 安装solr
 # 注意版本可能会变, 需要确认
 version=7.4.0
@@ -193,7 +196,6 @@ mkdir $solr_path/$cow_name
 cp -r $solr_install/solr-$version/server/solr/configsets/sample_techproducts_configs/conf $solr_path/$cow_name
 cd $solr_path
 chown solr:solr -R *
-
 # 拷贝conf
 #cp -rf /opt/solr_install/solr-7.3.1/server/solr/configsets/sample_techproducts_configs/conf/ /opt/solr_data/data/new_core
 # 修改Max Processes Limit 把4096改成65000
