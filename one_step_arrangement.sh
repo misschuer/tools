@@ -171,6 +171,31 @@ export PATH
 EOF
 source /etc/profile
 
+solr_path=$solr_data/data
+
+cow_name=nickname
+mkdir $solr_path/$cow_name
+cp -r $solr_install/solr-$version/server/solr/configsets/sample_techproducts_configs/conf $solr_path/$cow_name
+cd $solr_path
+chown solr:solr -R *
+
+cow_name=roomname
+mkdir $solr_path/$cow_name
+cp -r $solr_install/solr-$version/server/solr/configsets/sample_techproducts_configs/conf $solr_path/$cow_name
+cd $solr_path
+chown solr:solr -R *
+
+cow_name=roomsong
+mkdir $solr_path/$cow_name
+cp -r $solr_install/solr-$version/server/solr/configsets/sample_techproducts_configs/conf $solr_path/$cow_name
+cd $solr_path
+chown solr:solr -R *
+
+cow_name=topictitle
+mkdir $solr_path/$cow_name
+cp -r $solr_install/solr-$version/server/solr/configsets/sample_techproducts_configs/conf $solr_path/$cow_name
+cd $solr_path
+chown solr:solr -R *
 
 # 拷贝conf
 #cp -rf /opt/solr_install/solr-7.3.1/server/solr/configsets/sample_techproducts_configs/conf/ /opt/solr_data/data/new_core
