@@ -174,29 +174,6 @@ export PATH
 EOF
 source /etc/profile
 
-solr_path=$solr_data/data
-
-cow_name=nickname
-mkdir $solr_path/$cow_name
-cp -r $solr_install/solr-$version/server/solr/configsets/sample_techproducts_configs/conf $solr_path/$cow_name
-cd $solr_path
-
-cow_name=roomname
-mkdir $solr_path/$cow_name
-cp -r $solr_install/solr-$version/server/solr/configsets/sample_techproducts_configs/conf $solr_path/$cow_name
-cd $solr_path
-
-cow_name=roomsong
-mkdir $solr_path/$cow_name
-cp -r $solr_install/solr-$version/server/solr/configsets/sample_techproducts_configs/conf $solr_path/$cow_name
-cd $solr_path
-
-cow_name=topictitle
-mkdir $solr_path/$cow_name
-cp -r $solr_install/solr-$version/server/solr/configsets/sample_techproducts_configs/conf $solr_path/$cow_name
-cd $solr_path
-chown solr:solr -R *
-
 # 拷贝conf
 #cp -rf /opt/solr_install/solr-7.3.1/server/solr/configsets/sample_techproducts_configs/conf/ /opt/solr_data/data/new_core
 # 修改Max Processes Limit 把4096改成65000
@@ -251,4 +228,10 @@ ldconfig
 
 # 安装python3.6
 yum install -y python36
+
+#切换solr用户 创建core
+solr create -d $solr_install/solr-$version/server/solr/configsets/sample_techproducts_configs/conf -p 8983 -c nickname
+solr create -d $solr_install/solr-$version/server/solr/configsets/sample_techproducts_configs/conf -p 8983 -c roomname
+solr create -d $solr_install/solr-$version/server/solr/configsets/sample_techproducts_configs/conf -p 8983 -c roomsong
+solr create -d $solr_install/solr-$version/server/solr/configsets/sample_techproducts_configs/conf -p 8983 -c topictitle
 
