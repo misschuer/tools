@@ -210,3 +210,6 @@ cat << EOF > app.conf
 EOF
 ldconfig
 
+# 安装python3.6
+yum install -y python36
+
