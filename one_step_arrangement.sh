@@ -166,7 +166,7 @@ fi
 sh solr-$version/bin/install_solr_service.sh solr-$version.zip -d $solr_data -i $solr_install
 
 cat << EOF >> /etc/profile
-PATH=$PATH:$solr_install/solr-$version/bin/solr
+PATH=$PATH:$solr_install/solr-$version/bin
 export PATH
 EOF
 source /etc/profile
