@@ -229,6 +229,13 @@ ldconfig
 # 安装python3.6
 yum install -y python36
 
+if [ ! -d "/data" ];then
+    mkdir /data
+fi
+if [ ! -d "/data/app" ];then
+    mkdir /data/app
+fi
+
 #切换solr用户 创建core
 su solr
 solr create -d $solr_install/solr-$version/server/solr/configsets/sample_techproducts_configs/conf -p 8983 -c nickname
