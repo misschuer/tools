@@ -230,6 +230,7 @@ ldconfig
 yum install -y python36
 
 #切换solr用户 创建core
+su solr
 solr create -d $solr_install/solr-$version/server/solr/configsets/sample_techproducts_configs/conf -p 8983 -c nickname
 solr create -d $solr_install/solr-$version/server/solr/configsets/sample_techproducts_configs/conf -p 8983 -c roomname
 solr create -d $solr_install/solr-$version/server/solr/configsets/sample_techproducts_configs/conf -p 8983 -c roomsong
