@@ -151,7 +151,7 @@ firewall-cmd --reload
 # EOF
 # source /etc/profile
 
--- 安装solr
+# 安装solr
 wget https://mirrors.tuna.tsinghua.edu.cn/apache/lucene/solr/7.3.1/solr-7.3.1.zip
 unzip solr-7.3.1.zip
 solr_data=/opt/solr_data
