@@ -177,19 +177,16 @@ cow_name=nickname
 mkdir $solr_path/$cow_name
 cp -r $solr_install/solr-$version/server/solr/configsets/sample_techproducts_configs/conf $solr_path/$cow_name
 cd $solr_path
-chown solr:solr -R *
 
 cow_name=roomname
 mkdir $solr_path/$cow_name
 cp -r $solr_install/solr-$version/server/solr/configsets/sample_techproducts_configs/conf $solr_path/$cow_name
 cd $solr_path
-chown solr:solr -R *
 
 cow_name=roomsong
 mkdir $solr_path/$cow_name
 cp -r $solr_install/solr-$version/server/solr/configsets/sample_techproducts_configs/conf $solr_path/$cow_name
 cd $solr_path
-chown solr:solr -R *
 
 cow_name=topictitle
 mkdir $solr_path/$cow_name
