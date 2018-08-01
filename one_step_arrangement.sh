@@ -152,8 +152,10 @@ firewall-cmd --reload
 # source /etc/profile
 
 # 安装solr
-wget https://mirrors.tuna.tsinghua.edu.cn/apache/lucene/solr/7.3.1/solr-7.3.1.zip
-unzip solr-7.3.1.zip
+# 注意版本可能会变, 需要确认
+version=7.4.0
+wget https://mirrors.tuna.tsinghua.edu.cn/apache/lucene/solr/$version/solr-$version.zip
+unzip solr-$version.zip
 solr_data=/opt/solr_data
 solr_install=/opt/solr_install
 if [ ! -d "$solr_data" ];then
@@ -162,7 +164,7 @@ fi
 if [ ! -d "$solr_install" ];then
     mkdir $solr_install
 fi
-sh solr-7.3.1/bin/install_solr_service.sh solr-7.3.1.zip -d $solr_data -i $solr_install
+sh solr-7.3.1/bin/install_solr_service.sh solr-$version.zip -d $solr_data -i $solr_install
 # 拷贝conf
 #cp -rf /opt/solr_install/solr-7.3.1/server/solr/configsets/sample_techproducts_configs/conf/ /opt/solr_data/data/new_core
 # 修改Max Processes Limit 把4096改成65000
