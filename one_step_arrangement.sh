@@ -164,7 +164,7 @@ fi
 if [ ! -d "$solr_install" ];then
     mkdir $solr_install
 fi
-sh solr-7.3.1/bin/install_solr_service.sh solr-$version.zip -d $solr_data -i $solr_install
+sh solr-$version/bin/install_solr_service.sh solr-$version.zip -d $solr_data -i $solr_install
 # 拷贝conf
 #cp -rf /opt/solr_install/solr-7.3.1/server/solr/configsets/sample_techproducts_configs/conf/ /opt/solr_data/data/new_core
 # 修改Max Processes Limit 把4096改成65000
