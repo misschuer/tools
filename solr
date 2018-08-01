@@ -1,0 +1,4 @@
+to enableStreamBody
+curl -H 'Content-type:application/json' -d '{"set-property": {"requestDispatcher.requestParsers.enableRemoteStreaming": true}, "set-property": {"requestDispatcher.requestParsers.enableStreamBody": true}}' http://localhost:8983/solr/topictitle/config
+
+topictitle is cow name
