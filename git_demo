@@ -1,0 +1,5 @@
+http://rogerdudler.github.io/git-guide/index.zh.html
+
+
+增加远程仓库
+git remote add origin ssh://root@172.16.0.30/xx.git
