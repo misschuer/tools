@@ -16,3 +16,6 @@ yum install -y openresty-resty
 git clone https://github.com/misschuer/tools.git
 cd tools/lib
 \cp -rf * /usr/local/openresty/lualib
+
+groupadd resty
+useradd -d /resty -m resty -g resty
