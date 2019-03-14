@@ -1,0 +1,14 @@
+# 添加并更新源
+echo 'install yum-utils'
+yum install -y yum-utils
+yum-config-manager --add-repo https://openresty.org/package/centos/openresty.repo
+yum update -y
+
+# 安装git
+echo 'install git'
+yum install -y git
+
+# 安装openresty-resty 1.13.6
+echo 'install openresty-resty 1.13.6'
+yum install -y openresty-resty
+
