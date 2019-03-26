@@ -27,9 +27,9 @@ cd tools/lib
 groupadd resty
 useradd -d /resty -g resty
 
+cd $setup_dir
 # 下载openresty-china的demo
 git clone https://github.com/sumory/openresty-china.git
-
 
 # 安装lor
 git clone https://github.com/sumory/lor
@@ -61,5 +61,6 @@ git clone $git_dir/$git_name1
 cd $git_name1
 cp -r $setup_dir/openresty-china/* .
 
+cd $setup_dir
 # 安装宝塔
 yum install -y wget && wget -O install.sh http://download.bt.cn/install/install_6.0.sh && sh install.sh
