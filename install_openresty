@@ -60,6 +60,9 @@ cd $server_dir
 git clone $git_dir/$git_name1
 cd $git_name1
 cp -r $setup_dir/openresty-china/* .
+git add .
+git commit -am "first commit"
+git push origin master
 
 # 把服务器的操作文件替换掉
 cd $server_dir/$git_name1
