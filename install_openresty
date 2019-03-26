@@ -1,3 +1,10 @@
+# 新建安装包目录
+setup_dir=/home/setup
+if [ ! -d "$setup_dir" ];then
+    mkdir $setup_dir
+fi
+cd $setup_dir
+
 # 添加并更新源
 echo 'install yum-utils'
 yum install -y yum-utils
@@ -19,3 +26,40 @@ cd tools/lib
 
 groupadd resty
 useradd -d /resty -g resty
+
+# 下载openresty-china的demo
+git clone https://github.com/sumory/openresty-china.git
+
+
+# 安装lor
+git clone https://github.com/sumory/lor
+cd lor
+make install
+
+#新建git仓库们的文件夹
+git_dir=/home/gits
+if [ ! -d "$git_dir" ];then
+    mkdir $git_dir
+fi
+cd $git_dir
+
+# 创建一个git仓库
+git_name1=orchina
+mkdir $git_name1.git
+cd $git_name1.git
+git init --bare
+
+#新建项目
+server_dir=/home/server
+#新建文件夹
+if [ ! -d "$server_dir" ];then
+    mkdir $server_dir
+fi
+cd $server_dir
+# 复制项目
+git clone $git_dir/$git_name1
+cd $git_name1
+cp -r $setup_dir/openresty-china/* .
+
+# 安装宝塔
+yum install -y wget && wget -O install.sh http://download.bt.cn/install/install_6.0.sh && sh install.sh
