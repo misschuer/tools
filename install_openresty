@@ -82,3 +82,6 @@ fi
 if [ ! -d "/data/openresty-china/static" ];then
     mkdir /data/openresty-china/static
 fi
+
+# 把静态文件拷进去
+cp -rf $git_dir/$git_name1/install/avatar /data/openresty-china/static
