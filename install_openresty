@@ -69,3 +69,16 @@ cd $server_dir/$git_name1
 \cp $setup_dir/tools/policed/start.sh .
 \cp $setup_dir/tools/policed/reload.sh .
 \cp $setup_dir/tools/policed/stop.sh .
+
+# 新建静态文件夹
+if [ ! -d "/data" ];then
+    mkdir /data
+fi
+
+if [ ! -d "/data/openresty-china" ];then
+    mkdir /data/openresty-china
+fi
+
+if [ ! -d "/data/openresty-china/static" ];then
+    mkdir /data/openresty-china/static
+fi
