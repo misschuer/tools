@@ -156,6 +156,7 @@ local function uploader(config)
 					config.dir = config.dir or "/tmp"
 					config.chunk_size = config.chunk_size or 4096
 					config.recieve_timeout = config.recieve_timeout or 20000 -- 20s
+					req.body = req.body or {}
 					local file = _multipart_formdata(config, req.body)
 					req.file = req.file or file
 					next()
