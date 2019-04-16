@@ -1,0 +1,175 @@
+local upload = require("resty.upload")
+local utils = require("app.libs.utils")
+
+local sfind = string.find
+local match = string.match
+local ngx_var = ngx.var
+
+local function getextension(filename)
+	return filename:match(".+%.(%w+)$")
+end
+
+local function do_param(form)
+	local val = ''
+	while true do
+		local typ, res, err = form:read()
+		if not typ or err then
+			ngx.log(ngx.ERR, "failed to read: ", err)
+			return nil, "failed to read"
+		end
+
+		if typ == "body" then
+			val = val .. res
+		elseif typ == "part_end" then
+			break
+		else
+			-- do nothing
+		end
+	end
+
+	return val
+end
+
+local function do_file(config, form, origin_filename)
+	local unique_name = utils.get_pure_uneque_id()
+	local file, path, filename, extname, filetype
+
+	while true do
+		local typ, res, err = form:read()
+		if not typ or err then
+			ngx.log(ngx.ERR, "failed to read: ", err)
+			return nil, "failed to read"
+		end
+
+		if typ == "header" then
+			if res[1] == "Content-Type" then
+				filetype = res[2]
+			end
+
+			if origin_filename and filetype then
+				if not extname then
+					extname = getextension(origin_filename)
+				end
+
+				-- 判断是否是可上传的类型
+				if not config.extname[extname] then
+					ngx.log(ngx.ERR, "not allowed upload file type:", origin_filename)
+					return nil, "not allowed upload file type"
+				end
+
+				filename = unique_name .. "." .. extname
+				path = config.dir.. "/" .. filename
+
+				file, err = io.open(path, "w+")
+				if err then
+					ngx.log(ngx.ERR, "open file error:", err)
+					return nil, "open file error"
+				end
+			end
+
+		elseif typ == "body" then
+			if file then
+				file:write(res)
+			else
+				ngx.log(ngx.ERR, "upload file error, path:", path)
+				return nil, "upload file error"
+			end
+		elseif typ == "part_end" then
+            file:close()
+            file = nil
+			break
+		else
+			-- do nothing
+		end
+	end
+
+	return {
+		success = true,
+		origin_filename = origin_filename,
+		extname = extname,
+		path = path,
+		filename = filename,
+	}
+end
+
+local function _multipart_formdata(config, body)
+	local form, err = upload:new(config.chunk_size)
+	if not form then
+		ngx.log(ngx.ERR, "failed to new upload: ", err)
+		ngx.exit(500)
+	end
+	form:set_timeout(config.recieve_timeout)
+
+	body = body or {}
+	local files = {}
+	while true do
+		local typ, res, err = form:read()
+
+		if not typ or err then
+			ngx.log(ngx.ERR, "failed to read: ", err)
+			return {success = false, msg = "failed to read"}, body
+		end
+
+		if typ == "header" then
+			if res[1] == "Content-Disposition" then
+				local key = match(res[2], "name=\"(.-)\"")
+				local origin_filename = match(res[2], "filename=\"(.-)\"")
+
+				-- 这里判断是文件还是普通参数
+				if origin_filename then
+					local file, err = do_file(config, form, origin_filename)
+					if not file or err then
+						return {success = false, msg = err}, {}
+					end
+					table.insert(files, file)
+				else
+					if not key then
+						return {success = false, msg = "key is not exist"}, {}
+					end
+					local value, err = do_param(form)
+					if err then
+						return {success = false, msg = err}, {}
+					end
+					body[key] = value
+				end
+			end
+		elseif typ == 'eof' then
+			break
+		else
+			-- do nothing
+		end
+	end
+
+	return {success = true, files = files}, body
+end
+
+local function uploader(config)
+	return function(req, res, next)
+
+		if ngx_var.request_method == "POST" then
+			local get_headers = ngx.req.get_headers()
+			local header = get_headers['Content-Type']
+			if header then
+				local is_multipart = sfind(header, "multipart")
+				if is_multipart and is_multipart>0 then
+					config = config or {}
+					config.dir = config.dir or "/tmp"
+					config.chunk_size = config.chunk_size or 4096
+					config.recieve_timeout = config.recieve_timeout or 20000 -- 20s
+					local file = _multipart_formdata(config, req.body)
+					req.file = req.file or file
+					next()
+					
+				else
+					next()
+				end
+			else
+				next()
+			end
+		else
+			next()
+		end
+	end
+end
+
+return uploader
