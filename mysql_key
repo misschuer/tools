@@ -2,8 +2,6 @@ SELECT * FROM user WHERE id = 1 AND state = 0
 SELECT * FROM user WHERE name like '%miss%' AND state = 0
 
 mysql对条件字段的执行查找顺序
-1. 优先查找有索引的字段
-2. 同是索引优先查找数据较少的字段
-3. 全表搜索
+优先查找数据较少的字段
 
 所以说条件里面至少一个字段作为索引, 但也别乱加索引会影响mysql执行效率
