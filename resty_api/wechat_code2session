@@ -1,0 +1,45 @@
+local mi_http   = require("app.libs.mi_http")
+local cjson     = require("cjson")
+local utils     = require("app.libs.utils")
+
+local wechat_program = {}
+wechat_program.VERSION = 1.0
+
+local APP_ID     = '<APP_ID>'
+local APP_SECRET = '<APP_SECRET>'
+local verify_url = 'https://api.weixin.qq.com/sns/jscode2session'
+
+function wechat_program.code2session(jscode)
+    local headers = {
+        ["Content-Type"] = mi_http.CT_URL_ENCODED,
+    }
+    
+    local data = {
+        appid       = APP_ID,
+        secret      = APP_SECRET,
+        js_code     = jscode,
+        grant_type  = 'authorization_code',
+    }
+    
+    local list = {}
+    for k, v in pairs(data) do
+        table.insert(list, string.format("%s=%s", k, v))
+    end
+    local params = utils.string_join('&', list)
+    local url = verify_url .. "?" .. params
+    
+    local res, err = mi_http.request(url, mi_http.METHOD_GET, nil, headers)
+    local obj, err = mi_http.doResponse(res, err)
+    
+    if not obj or err then
+        return nil, err
+    end
+
+    if tonumber(obj.errcode) and tonumber(obj.errcode) ~= 0 then
+        return nil, obj.errmsg
+    end
+    
+    return obj
+end
+
+return wechat_program
