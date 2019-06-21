@@ -1,0 +1,2 @@
+curl https://mirrors.tuna.tsinghua.edu.cn/git/git-repo -o /usr/bin/repo
+chmod +x /usr/bin/repo
