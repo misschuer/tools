@@ -1,0 +1,53 @@
+1> 先安装jdk
+2> 安装httpd-tools
+  yum install -y httpd-tools
+3> 安装gerrit
+  a> 官网下载gerrit
+  b> 命令行输入
+    java -jar gerrit-3.3.3.war init -d /home/gerrit
+    安装过程中除了 Authentication method 时输入 http外, 其他均可回车。
+  c> gerrit.conf内容如下
+      [gerrit]
+        basePath = git
+        canonicalWebUrl = http://127.0.0.1:8080/
+        serverId = 54636d27-0819-4a83-8d54-b678fc45e364
+      [container]
+        javaOptions = "-Dflogger.backend_factory=com.google.common.flogger.backend.log4j.Log4jBackendFactory#getInstance"
+        javaOptions = "-Dflogger.logging_context=com.google.gerrit.server.logging.LoggingContext#getInstance"
+        user = root
+        javaHome = /usr/local/java/jre
+      [index]
+        type = LUCENE
+      [auth]
+        type = HTTP
+      [receive]
+        enableSignedPush = false
+      [sendemail]
+        smtpServer = localhost
+      [sshd]
+        listenAddress = *:29418
+      [httpd]
+        listenUrl = proxy-http://*:8080/
+      [cache]
+        directory = cache
+4> 通过htpasswd生成验证登录
+    htpasswd -c /home/gerrit/gerrit.password admin
+
+5> 安装nginx
+  通过宝塔安装nginx
+  conf里面加个server
+  server {
+     listen 8082;
+     server_name 127.0.0.1;
+     allow   all;
+     deny    all;
+
+     auth_basic "Welcomme to Gerrit Code Review Site!";
+     auth_basic_user_file /home/gerrit/gerrit.password;
+
+     location / {
+        proxy_pass  http://127.0.0.1:8080;
+        proxy_set_header X-Forwarded-For $remote_addr;
+        proxy_set_header Host $host;
+     }
+   }
