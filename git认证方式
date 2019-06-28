@@ -1,0 +1,7 @@
+需要在~/.ssh里面创建config
+里面内容为:
+
+Host * 
+        KexAlgorithms +diffie-hellman-group1-sha1
+        Preferredauthentications publickey
+        IdentityFile ~/.ssh/gongyuan.key
