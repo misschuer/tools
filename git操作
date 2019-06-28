@@ -1,3 +1,10 @@
+执行下面两条命令，设置本地git邮箱和用户名以便下面下载代码。
+git config --global user.email "your email"
+git config --global user.name "your name"
+填写自己注册的用户名和邮箱。
+设置保存密码：
+git config --global credential.helper store
+
 配置git无需手动输入密钥
 需要在~/.ssh里面创建config
 里面内容为:
