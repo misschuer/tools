@@ -1,4 +1,4 @@
-user=mi
+user=$(id -un)
 sshDir=~/.ssh
 keyFile=$sshDir/authorized_keys
 ssh-keygen -t rsa -C "$user@gg" -f $user.key
