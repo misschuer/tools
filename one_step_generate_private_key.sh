@@ -1,7 +1,7 @@
 user=$(id -un)
 sshDir=~/.ssh
 keyFile=$sshDir/authorized_keys
-ssh-keygen -t rsa -C "$user@gg" -f $user.key
+ssh-keygen -t rsa -C "$user@gg" -f $sshDir/$user.key
 
 touch $keyFile
 cat $sshDir/$user.key.pub >> $keyFile
