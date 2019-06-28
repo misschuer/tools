@@ -6,3 +6,6 @@ Host *
         KexAlgorithms +diffie-hellman-group1-sha1
         Preferredauthentications publickey
         IdentityFile ~/.ssh/gongyuan.key
+
+git clone gerrit管理的数据
+git clone ssh://gongyuan@192.168.29.118:29418/webapp/garbageclassification && scp -p -P 29418 gongyuan@192.168.29.118:hooks/commit-msg garbageclassification/.git/hooks/
